@@ -8,7 +8,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
-import { register } from "./controllers/auth.js";
+import { register, deleteUser, getUsers } from "./controllers/auth.js";
 mongoose.set("strictQuery", true);
 
 //CONFIGURATIONS
@@ -31,14 +31,15 @@ const storage = multer.diskStorage({
     cb(null, "public/assets");
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+    cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
 const upload = multer({ storage });
 
 //ROUTES WITH FILES
 app.post("/auth/register", upload.single("picture"), register);
-
+app.delete("/auth/delete/:id", deleteUser);
+app.get("/auth/users", getUsers);
 //MONGOOSE SETUP
 const PORT = process.env.PORT || 6001;
 
