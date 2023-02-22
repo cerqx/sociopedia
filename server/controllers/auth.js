@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js ";
 
 //REGISTER USER
-
 export async function register(req, res) {
   try {
     const picturePath = req.file?.filename;
@@ -31,29 +30,25 @@ export async function register(req, res) {
   }
 }
 
-export async function deleteUser(req, res) {
+//LOGGING IN
+export async function login(req, res) {
   try {
-    const { id } = req.params;
+    const { email, password } = req.body;
 
-    const user = await User.findByIdAndDelete(id);
-
+    const user = await User.findOne({ email: email });
     if (!user) {
-      return res.status(404).json({ msg: "User not found!" });
+      return res.status(400).json({ msg: "User does not exist!" });
     }
-    res.status(200).json({ msg: "User deleted!" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-}
 
-export async function getUsers(req, res) {
-  try {
-    const users = await User.find();
-
-    if (users.length === 0) {
-      return res.status(404).json({ msg: "Not user registered yet!" });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ msg: "Invalid credentials." });
     }
-    res.status(200).json(users);
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    delete user.password;
+
+    res.status(200).json({ token, user });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
