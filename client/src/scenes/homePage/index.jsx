@@ -1,10 +1,11 @@
+import { Box } from "@mui/material";
 import Navbar from "scenes/navbar";
 
 export default function HomePage() {
   return (
-    <div>
+    <Box>
       <Navbar />
       <p>HomePage</p>
-    </div>
+    </Box>
   );
 }
