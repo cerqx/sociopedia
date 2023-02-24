@@ -48,7 +48,13 @@ const Form = () => {
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
-  async function handleFormSubmit(values, onSubmitProps) {}
+  async function register(values, onSubmitProps) {}
+  async function login(values, onSubmitProps) {}
+
+  async function handleFormSubmit(values, onSubmitProps) {
+    if (isLogin) await login(values, onSubmitProps);
+    if (isRegister) await register(values, onSubmitProps);
+  }
 
   return (
     <Formik
@@ -108,6 +114,7 @@ const Form = () => {
                   helperText={touched.occupation && errors.occupation}
                   sx={{ gridColumn: "span 4" }}
                 />
+
                 <Box gridColumn="span 4" border={`1px solid ${palette.neutral.medium}`} borderRadius="5px" p="1rem">
                   <Dropzone
                     acceptedFiles=".jpg,.jpeg,.png"
