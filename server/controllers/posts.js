@@ -30,7 +30,7 @@ export async function createPost(req, res) {
 //READ
 export async function getFeedPosts(req, res) {
   try {
-    const post = await Post.find();
+    const post = await Post.find().sort({ updatedAt: -1 });
     res.status(200).json(post);
   } catch (err) {
     res.status(404).json({ msg: err.message });
@@ -40,7 +40,7 @@ export async function getFeedPosts(req, res) {
 export async function getUserPosts(req, res) {
   try {
     const { userId } = req.params;
-    const posts = await Post.find({ userId });
+    const posts = await Post.find({ userId }).sort({ updatedAt: -1 });
     res.status(200).json(posts);
   } catch (err) {
     res.status(404).json({ msg: err.message });
